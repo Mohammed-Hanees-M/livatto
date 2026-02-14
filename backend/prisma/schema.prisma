@@ -1,0 +1,178 @@
+// Livatto Database Schema
+// Production-grade Live Streaming + 24/7 Live TV Platform (FINAL)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// User Model - Authentication
+// ============================================
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String   // Hashed with bcrypt
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+// ============================================
+// Video Model - Video Library
+// ============================================
+model Video {
+  id         String      @id @default(uuid())
+  title      String
+  filename   String
+  filepath   String      // Storage path
+  duration   Int?        // seconds
+  filesize   BigInt
+  mimetype   String
+  uploadedAt DateTime    @default(now())
+  schedules  Schedule[]
+  streams    Stream[]    // 🎬 Track when this video was streamed
+  streamLogs StreamLog[]
+
+  @@map("videos")
+}
+
+// ============================================
+// Live Channel Model (🔥 NEW - 24/7 TV SYSTEM)
+// ============================================
+model Channel {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  is24x7      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  streams     Stream[]
+
+  @@map("channels")
+}
+
+// ============================================
+// Schedule Model - Scheduled Streaming
+// ============================================
+model Schedule {
+  id        String         @id @default(uuid())
+  videoId   String
+  video     Video          @relation(fields: [videoId], references: [id], onDelete: Cascade)
+  startTime DateTime
+  endTime   DateTime?
+  timezone  String         @default("UTC")
+  status    ScheduleStatus @default(PENDING)
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+  streams   Stream[]
+
+  @@map("schedules")
+}
+
+enum ScheduleStatus {
+  PENDING
+  ACTIVE
+  COMPLETED
+  CANCELLED
+}
+
+// ============================================
+// Stream Model - CORE (FIXED FOR 24/7 + SCHEDULE)
+// ============================================
+model Stream {
+  id           String       @id @default(uuid())
+
+  // 🔥 OPTIONAL for 24/7 Live TV mode
+  scheduleId   String?
+  schedule     Schedule?    @relation(fields: [scheduleId], references: [id], onDelete: SetNull)
+
+  // 🎬 NEW: Track which video is being streamed (for analytics)
+  videoId      String?
+  video        Video?       @relation(fields: [videoId], references: [id], onDelete: SetNull)
+
+  // 🔥 NEW: Channel support (Live TV)
+  channelId    String?
+  channel      Channel?     @relation(fields: [channelId], references: [id], onDelete: SetNull)
+
+  status       StreamStatus @default(IDLE)
+  rtmpUrl      String?
+  streamKey    String?
+  startedAt    DateTime?
+  stoppedAt    DateTime?
+  failureCount Int          @default(0)
+  lastError    String?
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  logs         StreamLog[]
+
+  @@map("streams")
+}
+
+enum StreamStatus {
+  IDLE
+  STARTING
+  RUNNING
+  STOPPING
+  STOPPED
+  FAILED
+}
+
+// ============================================
+// Stream Log Model - FIXED (videoId OPTIONAL)
+// ============================================
+model StreamLog {
+  id        String   @id @default(uuid())
+  streamId  String
+  stream    Stream   @relation(fields: [streamId], references: [id], onDelete: Cascade)
+
+  // 🔥 OPTIONAL (required for 24/7 loop mode)
+  videoId   String?
+  video     Video?   @relation(fields: [videoId], references: [id], onDelete: SetNull)
+
+  event     String   // START, STOP, ERROR, RESTART
+  message   String?
+  metadata  Json?
+  timestamp DateTime @default(now())
+
+  @@map("stream_logs")
+}
+
+// ============================================
+// Stream Configuration - Overlays, Watermarks
+// ============================================
+model StreamConfig {
+  id              String   @id @default(uuid())
+  logoPath        String?
+  logoPosition    String?
+  scrollingText   String?
+  introVideoPath  String?
+  outroVideoPath  String?
+  overlaySettings Json?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("stream_configs")
+}
+
+// ============================================
+// Chat Automation Config
+// ============================================
+model ChatConfig {
+  id             String   @id @default(uuid())
+  welcomeMessage String?
+  autoReplyRules Json
+  isEnabled      Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@map("chat_configs")
+}
