@@ -16,6 +16,7 @@ exports.StreamsController = void 0;
 const common_1 = require("@nestjs/common");
 const streams_service_1 = require("./streams.service");
 const stream_dto_1 = require("./dto/stream.dto");
+const jwt_auth_guard_1 = require("../auth/jwt-auth.guard");
 let StreamsController = class StreamsController {
     streamsService;
     constructor(streamsService) {
@@ -95,6 +96,7 @@ __decorate([
 ], StreamsController.prototype, "getStreamLogs", null);
 exports.StreamsController = StreamsController = __decorate([
     (0, common_1.Controller)('streams'),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     __metadata("design:paramtypes", [streams_service_1.StreamsService])
 ], StreamsController);
 //# sourceMappingURL=streams.controller.js.map

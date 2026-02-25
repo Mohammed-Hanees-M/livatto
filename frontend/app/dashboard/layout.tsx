@@ -10,10 +10,13 @@ export default function DashboardLayout({
 }) {
     return (
         <ProtectedRoute>
-            <div className="flex min-h-screen bg-gray-50 dark:bg-slate-900">
+            <div className="flex min-h-screen">
                 <Sidebar />
-                <main className="flex-1 overflow-auto">
-                    {children}
+                <main className="flex-1 overflow-auto bg-transparent relative">
+                    {/* Content Area */}
+                    <div className="relative z-10 h-full">
+                        {children}
+                    </div>
                 </main>
             </div>
         </ProtectedRoute>

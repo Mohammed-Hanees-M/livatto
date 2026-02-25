@@ -1,36 +1,30 @@
+import { OnModuleInit } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../../prisma.service';
 import { LoginDto, RegisterDto } from './dto/auth.dto';
-export declare class AuthService {
+export declare class AuthService implements OnModuleInit {
     private prisma;
     private jwtService;
-    constructor(prisma: PrismaService, jwtService: JwtService);
-    register(registerDto: RegisterDto): Promise<{
-        user: {
-            email: string;
-            name: string | null;
-            id: string;
-            createdAt: Date;
-            updatedAt: Date;
-        };
-        token: string;
-    }>;
+    private configService;
+    private readonly logger;
+    constructor(prisma: PrismaService, jwtService: JwtService, configService: ConfigService);
+    onModuleInit(): void;
+    register(registerDto: RegisterDto): Promise<void>;
     login(loginDto: LoginDto): Promise<{
         user: {
-            email: string;
-            name: string | null;
             id: string;
-            createdAt: Date;
-            updatedAt: Date;
+            email: any;
+            name: string;
+            role: string;
         };
         token: string;
     }>;
     getUserById(userId: string): Promise<{
-        email: string;
-        name: string | null;
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
+        email: any;
+        name: string;
+        role: string;
     }>;
     private generateToken;
 }

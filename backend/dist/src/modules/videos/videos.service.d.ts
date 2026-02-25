@@ -8,8 +8,8 @@ export declare class VideosService {
     create(file: Express.Multer.File, createVideoDto: CreateVideoDto): Promise<{
         filesize: string;
         url: string;
-        id: string;
         title: string;
+        id: string;
         filename: string;
         filepath: string;
         duration: number | null;
@@ -19,8 +19,8 @@ export declare class VideosService {
     findAll(): Promise<{
         filesize: string;
         url: string;
-        id: string;
         title: string;
+        id: string;
         filename: string;
         filepath: string;
         duration: number | null;
@@ -30,8 +30,8 @@ export declare class VideosService {
     findOne(id: string): Promise<{
         filesize: string;
         url: string;
-        id: string;
         title: string;
+        id: string;
         filename: string;
         filepath: string;
         duration: number | null;
@@ -41,8 +41,8 @@ export declare class VideosService {
     update(id: string, updateVideoDto: UpdateVideoDto): Promise<{
         filesize: string;
         url: string;
-        id: string;
         title: string;
+        id: string;
         filename: string;
         filepath: string;
         duration: number | null;

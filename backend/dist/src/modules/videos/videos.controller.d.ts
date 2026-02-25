@@ -6,8 +6,8 @@ export declare class VideosController {
     create(file: Express.Multer.File, createVideoDto: CreateVideoDto): Promise<{
         filesize: string;
         url: string;
-        id: string;
         title: string;
+        id: string;
         filename: string;
         filepath: string;
         duration: number | null;
@@ -17,8 +17,8 @@ export declare class VideosController {
     findAll(): Promise<{
         filesize: string;
         url: string;
-        id: string;
         title: string;
+        id: string;
         filename: string;
         filepath: string;
         duration: number | null;
@@ -28,8 +28,8 @@ export declare class VideosController {
     findOne(id: string): Promise<{
         filesize: string;
         url: string;
-        id: string;
         title: string;
+        id: string;
         filename: string;
         filepath: string;
         duration: number | null;
@@ -39,8 +39,8 @@ export declare class VideosController {
     update(id: string, updateVideoDto: UpdateVideoDto): Promise<{
         filesize: string;
         url: string;
-        id: string;
         title: string;
+        id: string;
         filename: string;
         filepath: string;
         duration: number | null;

@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AnalyticsController = void 0;
 const common_1 = require("@nestjs/common");
 const analytics_service_1 = require("./analytics.service");
+const jwt_auth_guard_1 = require("../auth/jwt-auth.guard");
 let AnalyticsController = class AnalyticsController {
     analyticsService;
     constructor(analyticsService) {
@@ -53,6 +54,7 @@ __decorate([
 ], AnalyticsController.prototype, "getStreamingTrends", null);
 exports.AnalyticsController = AnalyticsController = __decorate([
     (0, common_1.Controller)('analytics'),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     __metadata("design:paramtypes", [analytics_service_1.AnalyticsService])
 ], AnalyticsController);
 //# sourceMappingURL=analytics.controller.js.map

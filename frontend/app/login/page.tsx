@@ -11,7 +11,7 @@ export default function LoginPage() {
 
     useEffect(() => {
         if (isAuthenticated && !loading) {
-            router.push('/');
+            router.push('/dashboard');
         }
     }, [isAuthenticated, loading, router]);
 
@@ -30,45 +30,59 @@ export default function LoginPage() {
 
     if (loading) {
         return (
-            <div className="min-h-screen flex items-center justify-center">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+            <div className="min-h-screen flex items-center justify-center bg-[#020617]">
+                <div className="relative">
+                    <div className="w-16 h-16 rounded-full border-t-2 border-r-2 border-indigo-500 animate-spin" />
+                    <div className="absolute inset-0 flex items-center justify-center text-[8px] font-black text-indigo-400 uppercase tracking-widest">Load</div>
+                </div>
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 via-white to-purple-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 p-4">
-            <div className="w-full max-w-md">
-                <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-8 space-y-8">
-                    {/* Logo/Header */}
-                    <div className="text-center">
-                        <h1 className="text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-                            Livatto
+        <div className="min-h-screen flex items-center justify-center p-6 relative overflow-hidden bg-[#020617]">
+            {/* Ambient Background Glows */}
+            <div className="absolute top-[-10%] right-[-10%] w-[60%] h-[60%] bg-indigo-900/10 rounded-full blur-[150px] animate-pulse" />
+            <div className="absolute bottom-[-10%] left-[-10%] w-[60%] h-[60%] bg-purple-900/10 rounded-full blur-[150px]" />
+
+            <div className="w-full max-w-[480px] z-10 animate-fade-in">
+                <div className="glass-card rounded-[40px] p-12 relative overflow-hidden">
+                    {/* Interior highlights */}
+                    <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+
+                    {/* Header */}
+                    <div className="text-center mb-10">
+                        <div className="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-gradient-to-br from-indigo-500 via-indigo-600 to-purple-600 shadow-2xl shadow-indigo-500/30 mb-8 relative group">
+                            <span className="text-4xl group-hover:scale-110 transition-transform">🎬</span>
+                            <div className="absolute inset-0 rounded-3xl bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity" />
+                        </div>
+                        <h1 className="text-4xl font-black tracking-[-0.04em] text-white uppercase mb-2">
+                            Livatto Core
                         </h1>
-                        <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-                            Professional Live Streaming Platform
+                        <p className="text-[11px] font-black text-slate-500 uppercase tracking-[0.4em]">
+                            Secure Authentication
                         </p>
                     </div>
 
                     {/* Login Form */}
-                    <form onSubmit={handleSubmit} className="space-y-6">
-                        <div>
-                            <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                Email Address
+                    <form onSubmit={handleSubmit} className="space-y-8">
+                        <div className="space-y-3">
+                            <label htmlFor="email" className="block text-[10px] font-black uppercase tracking-[0.2em] text-indigo-400/80 ml-1">
+                                Administrator ID
                             </label>
                             <input
                                 id="email"
                                 name="email"
-                                type="email"
+                                type="text"
                                 required
-                                className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
-                                placeholder="you@example.com"
+                                className="glass-input w-full"
+                                placeholder="Enter admin username"
                             />
                         </div>
 
-                        <div>
-                            <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                Password
+                        <div className="space-y-3">
+                            <label htmlFor="password" className="block text-[10px] font-black uppercase tracking-[0.2em] text-indigo-400/80 ml-1">
+                                Secure Key
                             </label>
                             <input
                                 id="password"
@@ -76,29 +90,36 @@ export default function LoginPage() {
                                 type="password"
                                 required
                                 minLength={6}
-                                className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
+                                className="glass-input w-full"
                                 placeholder="••••••••"
                             />
                         </div>
 
                         <button
                             type="submit"
-                            className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 px-4 rounded-lg font-medium hover:from-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition transform hover:scale-[1.02] active:scale-[0.98]"
+                            className="w-full bg-white text-slate-900 py-5 rounded-2xl font-black text-xs uppercase tracking-[0.2em] hover:bg-indigo-50 hover:shadow-[0_0_30px_rgba(255,255,255,0.2)] transition-all duration-300 active:scale-[0.98] mt-4 shadow-xl"
                         >
-                            Sign In
+                            Authorize Access
                         </button>
                     </form>
 
                     {/* Footer */}
-                    <div className="text-center text-sm text-gray-600 dark:text-gray-400">
-                        <p>
-                            Need an account?{' '}
-                            <Link href="/register" className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 font-medium">
-                                Register here
-                            </Link>
+                    <div className="mt-12 pt-10 border-t border-white/5 text-center">
+                        <div className="flex items-center justify-center gap-2 mb-4">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                            <p className="text-[9px] font-black text-emerald-500 uppercase tracking-widest">Biometric Ready</p>
+                        </div>
+                        <p className="text-[10px] font-bold text-slate-600 uppercase tracking-widest leading-relaxed">
+                            Secured for Single-Admin Operation<br />
+                            <span className="text-slate-700">© 2026 Livatto Platform v2.0.1</span>
                         </p>
                     </div>
                 </div>
+
+                {/* Bottom hint */}
+                <p className="text-center mt-8 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+                    Need Help? <Link href="#" className="text-indigo-400 hover:text-indigo-300 underline underline-offset-4 ml-1">View Documentation</Link>
+                </p>
             </div>
         </div>
     );

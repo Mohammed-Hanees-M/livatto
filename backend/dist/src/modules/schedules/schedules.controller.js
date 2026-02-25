@@ -16,6 +16,7 @@ exports.SchedulesController = void 0;
 const common_1 = require("@nestjs/common");
 const schedules_service_1 = require("./schedules.service");
 const schedule_dto_1 = require("./dto/schedule.dto");
+const jwt_auth_guard_1 = require("../auth/jwt-auth.guard");
 let SchedulesController = class SchedulesController {
     schedulesService;
     constructor(schedulesService) {
@@ -93,6 +94,7 @@ __decorate([
 ], SchedulesController.prototype, "remove", null);
 exports.SchedulesController = SchedulesController = __decorate([
     (0, common_1.Controller)('schedules'),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     __metadata("design:paramtypes", [schedules_service_1.SchedulesService])
 ], SchedulesController);
 //# sourceMappingURL=schedules.controller.js.map

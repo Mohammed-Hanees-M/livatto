@@ -26,8 +26,8 @@ export declare class StreamsService {
     }>;
     getActiveStream(): Promise<({
         video: {
-            id: string;
             title: string;
+            id: string;
             filename: string;
             filepath: string;
             duration: number | null;
@@ -37,10 +37,10 @@ export declare class StreamsService {
         } | null;
     } & {
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
         videoId: string | null;
         status: import("@prisma/client").$Enums.StreamStatus;
+        createdAt: Date;
+        updatedAt: Date;
         rtmpUrl: string | null;
         streamKey: string | null;
         scheduleId: string | null;
@@ -53,8 +53,8 @@ export declare class StreamsService {
     getStreamStatus(id: string): Promise<{
         durationMinutes: number | null;
         video: {
-            id: string;
             title: string;
+            id: string;
             filename: string;
             filepath: string;
             duration: number | null;
@@ -72,10 +72,10 @@ export declare class StreamsService {
             timestamp: Date;
         }[];
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
         videoId: string | null;
         status: import("@prisma/client").$Enums.StreamStatus;
+        createdAt: Date;
+        updatedAt: Date;
         rtmpUrl: string | null;
         streamKey: string | null;
         scheduleId: string | null;

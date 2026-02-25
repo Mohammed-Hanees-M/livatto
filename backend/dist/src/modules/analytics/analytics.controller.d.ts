@@ -22,8 +22,8 @@ export declare class AnalyticsController {
     getStreamHistory(limit?: string): Promise<({
         schedule: ({
             video: {
-                id: string;
                 title: string;
+                id: string;
                 filename: string;
                 filepath: string;
                 duration: number | null;
@@ -33,13 +33,13 @@ export declare class AnalyticsController {
             };
         } & {
             id: string;
-            createdAt: Date;
-            updatedAt: Date;
             videoId: string;
             startTime: Date;
             endTime: Date | null;
             timezone: string;
             status: import("@prisma/client").$Enums.ScheduleStatus;
+            createdAt: Date;
+            updatedAt: Date;
         }) | null;
         logs: {
             id: string;
@@ -52,10 +52,10 @@ export declare class AnalyticsController {
         }[];
     } & {
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
         videoId: string | null;
         status: import("@prisma/client").$Enums.StreamStatus;
+        createdAt: Date;
+        updatedAt: Date;
         rtmpUrl: string | null;
         streamKey: string | null;
         scheduleId: string | null;
