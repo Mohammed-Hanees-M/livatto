@@ -33,14 +33,16 @@ export class AuthService implements OnModuleInit {
 
     async login(loginDto: LoginDto) {
         const { email, password } = loginDto;
-        const adminUser = this.configService.get('ADMIN_USERNAME');
-        const adminPass = this.configService.get('ADMIN_PASSWORD');
+        const adminUser = this.configService.get('ADMIN_USERNAME')?.replace(/['"]/g, '');
+        const adminPass = this.configService.get('ADMIN_PASSWORD')?.replace(/['"]/g, '');
 
         if (!adminUser || !adminPass) {
+            this.logger.error('ADMIN_USERNAME or ADMIN_PASSWORD missing in .env');
             throw new UnauthorizedException('Server auth configuration error');
         }
 
         if (email !== adminUser || password !== adminPass) {
+            this.logger.warn(`Failed login attempt for identifier: ${email}`);
             throw new UnauthorizedException('Invalid credentials');
         }
 
