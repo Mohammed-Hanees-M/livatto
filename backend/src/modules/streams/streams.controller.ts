@@ -5,12 +5,15 @@ import {
     Param,
     Get,
     Delete,
+    UseGuards,
 } from '@nestjs/common';
 import { StreamsService } from './streams.service';
 import { StartStreamDto, StopStreamDto, SwitchVideoDto, StopActiveStreamDto } from './dto/stream.dto';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
-// 🚨 IMPORTANT: NO JWT GUARD HERE for streaming engine
+// 🚨 SECURED: JWT GUARD ADDED
 @Controller('streams')
+@UseGuards(JwtAuthGuard)
 export class StreamsController {
     constructor(private readonly streamsService: StreamsService) { }
 

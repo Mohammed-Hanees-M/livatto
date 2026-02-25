@@ -6,11 +6,14 @@ import {
     Delete,
     Body,
     Param,
+    UseGuards,
 } from '@nestjs/common';
 import { SchedulesService } from './schedules.service';
 import { CreateScheduleDto, UpdateScheduleDto } from './dto/schedule.dto';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
-@Controller('schedules') // 🔥 JWT REMOVED (for local Live TV mode)
+@Controller('schedules')
+@UseGuards(JwtAuthGuard)
 export class SchedulesController {
     constructor(private readonly schedulesService: SchedulesService) { }
 

@@ -1,93 +1,75 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, Logger, OnModuleInit } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../../prisma.service';
-import * as bcrypt from 'bcrypt';
 import { LoginDto, RegisterDto } from './dto/auth.dto';
 
 @Injectable()
-export class AuthService {
+export class AuthService implements OnModuleInit {
+    private readonly logger = new Logger(AuthService.name);
+
     constructor(
         private prisma: PrismaService,
         private jwtService: JwtService,
+        private configService: ConfigService,
     ) { }
 
-    async register(registerDto: RegisterDto) {
-        const { email, password, name } = registerDto;
+    onModuleInit() {
+        const adminUser = this.configService.get('ADMIN_USERNAME');
+        const adminPass = this.configService.get('ADMIN_PASSWORD');
 
-        // Check if user already exists
-        const existingUser = await this.prisma.user.findUnique({
-            where: { email },
-        });
-
-        if (existingUser) {
-            throw new UnauthorizedException('User already exists');
+        if (!adminUser || !adminPass) {
+            this.logger.error('❌ CRITICAL: ADMIN_USERNAME or ADMIN_PASSWORD is not set in .env');
+        } else if (adminPass === 'ChangeThisStrongPassword123!') {
+            this.logger.warn('⚠️  SECURITY WARNING: Using default ADMIN_PASSWORD. Please change it in your .env file!');
+        } else {
+            this.logger.log('✅ Single-Admin Authentication initialized');
         }
+    }
 
-        // Hash password
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        // Create user
-        const user = await this.prisma.user.create({
-            data: {
-                email,
-                password: hashedPassword,
-                name,
-            },
-        });
-
-        const { password: _, ...userWithoutPassword } = user;
-        return {
-            user: userWithoutPassword,
-            token: this.generateToken(user.id, user.email),
-        };
+    async register(registerDto: RegisterDto) {
+        throw new UnauthorizedException('Registration is disabled');
     }
 
     async login(loginDto: LoginDto) {
         const { email, password } = loginDto;
+        const adminUser = this.configService.get('ADMIN_USERNAME');
+        const adminPass = this.configService.get('ADMIN_PASSWORD');
 
-        // Find user
-        const user = await this.prisma.user.findUnique({
-            where: { email },
-        });
+        if (!adminUser || !adminPass) {
+            throw new UnauthorizedException('Server auth configuration error');
+        }
 
-        if (!user) {
+        if (email !== adminUser || password !== adminPass) {
             throw new UnauthorizedException('Invalid credentials');
         }
 
-        // Verify password
-        const isPasswordValid = await bcrypt.compare(password, user.password);
+        const user = {
+            id: 'admin',
+            email: adminUser,
+            name: 'Administrator',
+            role: 'admin',
+        };
 
-        if (!isPasswordValid) {
-            throw new UnauthorizedException('Invalid credentials');
-        }
-
-        const { password: _, ...userWithoutPassword } = user;
         return {
-            user: userWithoutPassword,
+            user,
             token: this.generateToken(user.id, user.email),
         };
     }
 
     async getUserById(userId: string) {
-        const user = await this.prisma.user.findUnique({
-            where: { id: userId },
-            select: {
-                id: true,
-                email: true,
-                name: true,
-                createdAt: true,
-                updatedAt: true,
-            },
-        });
-
-        if (!user) {
-            throw new UnauthorizedException('User not found');
+        if (userId === 'admin') {
+            return {
+                id: 'admin',
+                email: this.configService.get('ADMIN_USERNAME'),
+                name: 'Administrator',
+                role: 'admin',
+            };
         }
-
-        return user;
+        throw new UnauthorizedException('User not found');
     }
 
     private generateToken(userId: string, email: string): string {
-        return this.jwtService.sign({ userId, email });
+        return this.jwtService.sign({ userId, email, role: 'admin' });
     }
 }

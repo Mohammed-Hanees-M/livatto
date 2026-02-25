@@ -1,8 +1,10 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 import { AnalyticsService } from './analytics.service';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
-// 🔥 JWT REMOVED (analytics should be accessible to dashboard)
+// 🚨 SECURED: JWT GUARD ADDED
 @Controller('analytics')
+@UseGuards(JwtAuthGuard)
 export class AnalyticsController {
     constructor(private readonly analyticsService: AnalyticsService) { }
 

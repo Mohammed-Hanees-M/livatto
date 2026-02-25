@@ -8,12 +8,15 @@ import {
     Param,
     UseInterceptors,
     UploadedFile,
+    UseGuards,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { VideosService } from './videos.service';
 import { CreateVideoDto, UpdateVideoDto } from './dto/video.dto';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @Controller('videos')
+@UseGuards(JwtAuthGuard)
 export class VideosController {
     constructor(private readonly videosService: VideosService) { }
 
